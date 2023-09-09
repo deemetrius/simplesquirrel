@@ -42,7 +42,7 @@ namespace ssq {
         }
     }
 
-    Function Class::findFunc(const char* name) const {
+    Function Class::findFunc(const SQChar* name) const {
         Object object = Object::find(name);
         return Function(object);
     }
@@ -62,7 +62,7 @@ namespace ssq {
         return *this;
     }
 
-    void Class::findTable(const char* name, Object& table, SQFUNCTION dlg) const {
+    void Class::findTable(const SQChar* name, Object& table, SQFUNCTION dlg) const {
         // Check if the table has been referenced
         if(!table.isEmpty()) {
             return;
@@ -70,7 +70,7 @@ namespace ssq {
             
         // Find the table
         sq_pushobject(vm, obj);
-        sq_pushstring(vm, name, strlen(name));
+        sq_pushstring(vm, name, scstrlen(name));
 
         if (SQ_FAILED(sq_get(vm, -2))) {
             // Does not exists
@@ -84,7 +84,7 @@ namespace ssq {
             sq_pop(vm, 1);
 
             sq_pushobject(vm, obj); // Push class obj
-            sq_pushstring(vm, name, strlen(name));
+            sq_pushstring(vm, name, scstrlen(name));
             sq_pushobject(vm, table.getRaw());
             sq_newclosure(vm, dlg, 1);
 
@@ -109,7 +109,7 @@ namespace ssq {
         if (!SQ_SUCCEEDED(sq_get(vm, -2))) {
             const SQChar* s;
             sq_getstring(vm, 2, &s);
-            return sq_throwerror(vm, "Variable not found");
+            return sq_throwerror(vm, _SC("Variable not found"));
         }
 
         // push 'this'
@@ -125,7 +125,7 @@ namespace ssq {
         if (!SQ_SUCCEEDED(sq_get(vm, -2))) {
             const SQChar* s;
             sq_getstring(vm, 2, &s);
-            return sq_throwerror(vm, "Variable not found");
+            return sq_throwerror(vm, _SC("Variable not found"));
         }
 
         sq_push(vm, 1);

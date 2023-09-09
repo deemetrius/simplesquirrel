@@ -45,20 +45,20 @@ namespace ssq {
         * @throws TypeException if the object found is not a function
         * @returns Function object references the found function
         */
-        Function findFunc(const char* name) const;
+        Function findFunc(const SQChar* name) const;
         /**
         * @brief Finds a class in this table
         * @throws NotFoundException if function was not found
         * @throws TypeException if the object found is not a function
         * @returns Class object references the found class
         */
-        Class findClass(const char* name) const;
+        Class findClass(const SQChar* name) const;
         /**
         * @brief Adds a new class type to this table
         * @returns Class object references the added class
         */
         template<typename T, typename... Args>
-        Class addClass(const char* name, const std::function<T*(Args...)>& allocator = std::bind(&detail::defaultClassAllocator<T>), bool release = true){
+        Class addClass(const SQChar* name, const std::function<T*(Args...)>& allocator = std::bind(&detail::defaultClassAllocator<T>), bool release = true){
             sq_pushobject(vm, obj);
             Class cls(detail::addClass(vm, name, allocator, release));
             sq_pop(vm, 1);
@@ -69,7 +69,7 @@ namespace ssq {
         * @returns Class object references the added class
         */
         template<typename T, typename... Args>
-        Class addClass(const char* name, const Class::Ctor<T(Args...)>& constructor, bool release = true){
+        Class addClass(const SQChar* name, const Class::Ctor<T(Args...)>& constructor, bool release = true){
             const std::function<T*(Args...)> func = &constructor.allocate;
             return addClass<T>(name, func, release);
         }
@@ -78,7 +78,7 @@ namespace ssq {
         * @returns Class object references the added class
         */
         template<typename F>
-        Class addClass(const char* name, const F& lambda, bool release = true) {
+        Class addClass(const SQChar* name, const F& lambda, bool release = true) {
             return addClass(name, detail::make_function(lambda), release);
         }
         /**
@@ -86,7 +86,7 @@ namespace ssq {
         * @returns Class object references the added class
         */
         template<typename T>
-        Class addAbstractClass(const char* name) {
+        Class addAbstractClass(const SQChar* name) {
             sq_pushobject(vm, obj);
             Class cls(detail::addAbstractClass<T>(vm, name));
             sq_pop(vm, 1);
@@ -97,7 +97,7 @@ namespace ssq {
         * @returns Function object references the added function
         */
         template<typename R, typename... Args>
-        Function addFunc(const char* name, const std::function<R(Args...)>& func){
+        Function addFunc(const SQChar* name, const std::function<R(Args...)>& func){
             Function ret(vm);
             sq_pushobject(vm, obj);
             detail::addFunc(vm, name, func);
@@ -109,14 +109,14 @@ namespace ssq {
         * @returns Function object that references the added function
         */
         template<typename F>
-        Function addFunc(const char* name, const F& lambda) {
+        Function addFunc(const SQChar* name, const F& lambda) {
             return addFunc(name, detail::make_function(lambda));
         }
         /**
          * @brief Adds a new key-value pair to this table
          */
         template<typename T>
-        inline void set(const char* name, const T& value) {
+        inline void set(const SQChar* name, const T& value) {
             sq_pushobject(vm, obj);
             sq_pushstring(vm, name, strlen(name));
             detail::push<T>(vm, value);
@@ -124,14 +124,14 @@ namespace ssq {
             sq_pop(vm,1); // pop table
         }
         template<typename T>
-        inline T get(const char* name) {
+        inline T get(const SQChar* name) {
             return find(name).to<T>();
         }
         size_t size();
         /**
          * @brief Adds a new table to this table
          */
-        Table addTable(const char* name);
+        Table addTable(const SQChar* name);
         /**
         * @brief Copy assingment operator
         */

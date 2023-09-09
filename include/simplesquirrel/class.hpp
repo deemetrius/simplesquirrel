@@ -5,6 +5,7 @@
 #include <functional>
 #include "function.hpp"
 #include "binding.hpp"
+#include "helpers.h"
 
 namespace ssq {
     /**
@@ -60,7 +61,7 @@ namespace ssq {
         * @throws NotFoundException if function was not found
         * @throws TypeException if the object found is not a function
         */
-        Function findFunc(const char* name) const;
+        Function findFunc(const SQChar* name) const;
         /**
         * @brief Adds a new function type to this class
         * @param name Name of the function to add
@@ -137,7 +138,7 @@ namespace ssq {
         */
         Class& operator = (Class&& other) NOEXCEPT;
     protected:
-        void findTable(const char* name, Object& table, SQFUNCTION dlg) const;
+        void findTable(const SQChar* name, Object& table, SQFUNCTION dlg) const;
         static SQInteger dlgGetStub(HSQUIRRELVM vm);
         static SQInteger dlgSetStub(HSQUIRRELVM vm);
 

@@ -2,6 +2,7 @@
 #ifndef SSQ_ENUM_HEADER_H
 #define SSQ_ENUM_HEADER_H
 
+#include "helpers.h"
 #include "class.hpp"
 
 namespace ssq {

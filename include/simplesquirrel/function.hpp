@@ -2,6 +2,7 @@
 #ifndef SSQ_FUNCTION_HEADER_H
 #define SSQ_FUNCTION_HEADER_H
 
+#include "helpers.h"
 #include "object.hpp"
 #include "exceptions.hpp"
 #include "args.hpp"

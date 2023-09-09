@@ -4,6 +4,7 @@
 
 #include <string>
 #include <sstream>
+#include "helpers.h"
 #include "type.hpp"
 
 namespace ssq {

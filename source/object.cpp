@@ -90,17 +90,17 @@ namespace ssq {
         return getType() == Type::NULLPTR;
     }
 
-    Object Object::find(const char* name) const {
+    Object Object::find(const SQChar* name) const {
         if (vm == nullptr) throw RuntimeException("VM is not initialised");
 
         Object ret(vm);
 
         sq_pushobject(vm, obj);
-        sq_pushstring(vm, name, strlen(name));
+        sq_pushstring(vm, name, scstrlen(name));
 
         if (SQ_FAILED(sq_get(vm, -2))) {
             sq_pop(vm, 1);
-            throw NotFoundException(name);
+            throw NotFoundException(ToUtf8(name).c_str());
         }
 
         sq_getstackobj(vm, -1, &ret.getRaw());

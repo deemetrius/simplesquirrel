@@ -2,6 +2,7 @@
 #ifndef SSQ_VM_HEADER_H
 #define SSQ_VM_HEADER_H
 
+#include "helpers.h"
 #include "exceptions.hpp"
 #include "table.hpp"
 #include "script.hpp"
@@ -118,12 +119,12 @@ namespace ssq {
         * This name is used during runtime error information.
         * @throws CompileException
         */
-        Script compileSource(const char* source, const char* name = "buffer");
+        Script compileSource(const SQChar* source, const SQChar* name = _SC("buffer"));
         /**
         * @brief Compiles a script from a source file
         * @throws CompileException
         */
-        Script compileFile(const char* path);
+        Script compileFile(const SQChar* path);
         /**
         * @brief Runs a script
         * @details When the script runs for the first time, the contens such as
@@ -205,7 +206,7 @@ namespace ssq {
         /**
          * @brief Adds a new enum to this table
          */
-        Enum addEnum(const char* name);
+        Enum addEnum(const SQChar* name);
         /**
          * @brief Adds a new constant key-value pair to this table
          */

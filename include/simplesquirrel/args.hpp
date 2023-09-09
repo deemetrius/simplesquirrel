@@ -2,6 +2,7 @@
 #ifndef SSQ_ARGS_HEADER_H
 #define SSQ_ARGS_HEADER_H
 
+#include "helpers.h"
 #include "exceptions.hpp"
 #include <squirrel.h>
 #include <iostream>

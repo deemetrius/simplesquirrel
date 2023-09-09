@@ -2,6 +2,7 @@
 #ifndef SSQ_ALLOCATORS_HEADER_H
 #define SSQ_ALLOCATORS_HEADER_H
 
+#include "helpers.h"
 #include "object.hpp"
 #include "args.hpp"
 #include <functional>

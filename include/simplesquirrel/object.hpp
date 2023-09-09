@@ -26,6 +26,7 @@
 #include <unordered_map>
 #include <stdint.h>
 #include "exceptions.hpp"
+#include "helpers.h"
 #include "type.hpp"
 
 namespace ssq {
@@ -86,7 +87,7 @@ namespace ssq {
         /**
         * @brief Finds object within this object
         */
-        Object find(const char* name) const;
+        Object find(const SQChar* name) const;
         /**
         * @brief Returns the type of the object
         */

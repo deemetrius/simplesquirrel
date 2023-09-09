@@ -2,6 +2,7 @@
 #ifndef SSQ_BINDING_HEADER_H
 #define SSQ_BINDING_HEADER_H
 
+#include "helpers.h"
 #include "allocators.hpp"
 #include <functional>
 #include <cstring>

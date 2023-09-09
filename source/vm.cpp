@@ -95,9 +95,9 @@ namespace ssq {
         return sq_gettop(vm);
     }
 
-    Script VM::compileSource(const char* source, const char* name) {
+    Script VM::compileSource(const SQChar* source, const SQChar* name) {
         Script script(vm);
-        if(SQ_FAILED(sq_compilebuffer(vm, source, strlen(source), name, true))){
+        if(SQ_FAILED(sq_compilebuffer(vm, source, scstrlen(source), name, true))){
             if (!compileException)throw CompileException("Source cannot be compiled!");
             throw *compileException;
         }
@@ -108,7 +108,7 @@ namespace ssq {
         return script;
     }
 
-    Script VM::compileFile(const char* path) {
+    Script VM::compileFile(const SQChar* path) {
         Script script(vm);
         if (SQ_FAILED(sqstd_loadfile(vm, path, true))) {
             if (!compileException)throw CompileException("File not found or cannot be read!");
@@ -137,10 +137,10 @@ namespace ssq {
         }
     }
 
-    Enum VM::addEnum(const char* name) {
+    Enum VM::addEnum(const SQChar* name) {
         Enum enm(vm);
         sq_pushconsttable(vm);
-        sq_pushstring(vm, name, strlen(name));
+        sq_pushstring(vm, name, scstrlen(name));
         detail::push<Object>(vm, enm);
         sq_newslot(vm, -3, false);
         sq_pop(vm,1); // pop table
@@ -182,7 +182,7 @@ namespace ssq {
     void VM::defaultPrintFunc(HSQUIRRELVM vm, const SQChar *s, ...){
         va_list vl;
         va_start(vl, s);
-        vprintf(s, vl);
+        scvprintf(s, vl);
         printf("\n");
         va_end(vl);
     }
@@ -190,7 +190,7 @@ namespace ssq {
     void VM::defaultErrorFunc(HSQUIRRELVM vm, const SQChar *s, ...){
         va_list vl;
         va_start(vl, s);
-        fprintf(stderr, s, vl);
+        scvfprintf(stderr, s, vl);
         fprintf(stderr, "\n");
         va_end(vl);
     }
@@ -199,21 +199,21 @@ namespace ssq {
         SQStackInfos si;
         sq_stackinfos(vm, 1, &si);
 
-        auto source = (si.source != nullptr ? si.source : "null");
-        auto funcname = (si.funcname != nullptr ? si.funcname : "unknown");
+        auto source = (si.source != nullptr ? si.source : _SC("null"));
+        auto funcname = (si.funcname != nullptr ? si.funcname : _SC("unknown"));
 
         const SQChar *sErr = 0;
         if(sq_gettop(vm) >= 1){
             if(SQ_FAILED(sq_getstring(vm, 2, &sErr))){
-                sErr = "unknown error";
+                sErr = _SC("unknown error");
             }
         }
 
         auto ptr = reinterpret_cast<VM*>(sq_getforeignptr(vm));
         ptr->runtimeException.reset(new RuntimeException(
-            sErr,
-            source,
-            funcname,
+            ToUtf8(sErr).c_str(),
+            ToUtf8(source).c_str(),
+            ToUtf8(funcname).c_str(),
             si.line
         ));
         return 0;
@@ -227,8 +227,8 @@ namespace ssq {
         SQInteger column) {
         auto ptr = reinterpret_cast<VM*>(sq_getforeignptr(vm));
         ptr->compileException.reset(new CompileException(
-            desc,
-            source,
+            ToUtf8(desc).c_str(),
+            ToUtf8(source).c_str(),
             line,
             column
         ));

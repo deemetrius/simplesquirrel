@@ -2,6 +2,7 @@
 #ifndef SSQ_ARRAY_HEADER_H
 #define SSQ_ARRAY_HEADER_H
 
+#include "helpers.h"
 #include "object.hpp"
 #include "args.hpp"
 #include <squirrel.h>

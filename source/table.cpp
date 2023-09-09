@@ -30,20 +30,20 @@ namespace ssq {
             
     }
 
-    Function Table::findFunc(const char* name) const {
+    Function Table::findFunc(const SQChar* name) const {
         Object object = Object::find(name);
         return Function(object);
     }
 
-    Class Table::findClass(const char* name) const {
+    Class Table::findClass(const SQChar* name) const {
         Object object = Object::find(name);
         return Class(object);
     }
 
-    Table Table::addTable(const char* name) {
+    Table Table::addTable(const SQChar* name) {
         Table table(vm);
         sq_pushobject(vm, obj);
-        sq_pushstring(vm, name, strlen(name));
+        sq_pushstring(vm, name, scstrlen(name));
         detail::push<Object>(vm, table);
         sq_newslot(vm, -3, false);
         sq_pop(vm,1); // pop table
