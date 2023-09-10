@@ -97,7 +97,7 @@ namespace ssq {
 
             Object clsObj(vm);
             
-            sq_pushstring(vm, name, strlen(name));
+            sq_pushstring(vm, name, scstrlen(name));
             sq_newclass(vm, false);
 
             HSQOBJECT obj;
@@ -111,7 +111,7 @@ namespace ssq {
 
             sq_pushstring(vm, _SC("constructor"), -1);
             bindUserData<T*>(vm, allocator);
-            static char params[33];
+            static SQChar params[33];
             paramPacker<T*, Args...>(params);
 
             if (release) {
