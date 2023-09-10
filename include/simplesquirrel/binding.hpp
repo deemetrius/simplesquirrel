@@ -181,7 +181,7 @@ namespace ssq {
                     callGlobal(vm, funcPtr, index_range<offet, sizeof...(Args) + offet>());
                     return 0;
                 } catch (std::exception& e) {
-                    return sq_throwerror(vm, e.what());
+                    return sq_throwerror(vm, ToSqString(e.what()).c_str());
                 }
             }
         };
@@ -207,10 +207,10 @@ namespace ssq {
         static void addMemberFunc(HSQUIRRELVM vm, const SQChar* name, const std::function<R(Args...)>& func, bool isStatic) {
             static const std::size_t nparams = sizeof...(Args);
 
-            sq_pushstring(vm, name, strlen(name));
+            sq_pushstring(vm, name, scstrlen(name));
 
             bindUserData(vm, func);
-            static char params[33];
+            static SQChar params[33];
             paramPacker<Args...>(params);
 
             sq_newclosure(vm, &detail::func<0, R, Args...>::global, 1);

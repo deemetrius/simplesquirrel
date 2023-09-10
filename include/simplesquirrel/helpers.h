@@ -156,6 +156,81 @@ std::wstring FromUtf8(const wchar_t *pStr)
 }
 
 
+#ifdef SQUNICODE
+
+    inline
+    std::wstring ToSqString(const std::wstring &s)
+    {
+        return s;
+    }
+
+    inline
+    std::wstring ToSqString(const wchar_t *s)
+    {
+        if (!s)
+        {
+            return std::wstring();
+        }
+
+        return ToSqString(std::wstring(s));
+    }
+
+    inline
+    std::wstring ToSqString(const std::string &s)
+    {
+        return FromUtf8(s);
+    }
+
+    inline
+    std::wstring ToSqString(const char *s)
+    {
+        if (!s)
+        {
+            return std::wstring();
+        }
+
+        return ToSqString(std::string(s));
+    }
+
+#else
+
+    inline
+    std::string ToSqString(const std::string &s)
+    {
+        return s;
+    }
+
+    inline
+    std::string ToSqString(const char *s)
+    {
+        if (!s)
+        {
+            return std::string();
+        }
+
+        return std::string(s);
+    }
+
+    inline
+    std::string ToSqString(const std::wstring &s)
+    {
+        return ToUtf8(s);
+    }
+
+    inline
+    std::string ToSqString(const wchar_t *s)
+    {
+        if (!s)
+        {
+            return std::string();
+        }
+
+        return ToSqString(std::wstring(s));
+    }
+
+
+#endif
+
 
 } // namespace ssq {
 

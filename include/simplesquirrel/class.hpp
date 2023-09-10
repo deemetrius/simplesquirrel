@@ -71,7 +71,7 @@ namespace ssq {
         * @returns Function object references the added function
         */
         template <typename Return, typename Object, typename... Args>
-        Function addFunc(const char* name, const std::function<Return(Object*, Args...)>& func, bool isStatic = false) {
+        Function addFunc(const SQChar* name, const std::function<Return(Object*, Args...)>& func, bool isStatic = false) {
             if (vm == nullptr) throw RuntimeException("VM is not initialised");
             Function ret(vm);
             sq_pushobject(vm, obj);
@@ -87,7 +87,7 @@ namespace ssq {
         * @returns Function object references the added function
         */
         template <typename Return, typename Object, typename... Args>
-        Function addFunc(const char* name, Return(Object::*memfunc)(Args...), bool isStatic = false) {
+        Function addFunc(const SQChar* name, Return(Object::*memfunc)(Args...), bool isStatic = false) {
             auto func = std::function<Return(Object*, Args...)>(std::mem_fn(memfunc));
             return addFunc(name, func, isStatic);
         }
@@ -99,7 +99,7 @@ namespace ssq {
         * @returns Function object references the added function
         */
         template <typename Return, typename Object, typename... Args>
-        Function addFunc(const char* name, Return(Object::*memfunc)(Args...) const, bool isStatic = false) {
+        Function addFunc(const SQChar* name, Return(Object::*memfunc)(Args...) const, bool isStatic = false) {
             auto func = std::function<Return(Object*, Args...)>(std::mem_fn(memfunc));
             return addFunc(name, func, isStatic);
         }
