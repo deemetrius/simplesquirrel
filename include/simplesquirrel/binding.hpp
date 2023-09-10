@@ -72,15 +72,15 @@ namespace ssq {
         template <> struct Param<std::nullptr_t> {static const char type = 'o';};
 
         template <typename A>
-        static void paramPackerType(char* ptr) {
+        static void paramPackerType(SQChar* ptr) {
             *ptr = Param<typename std::remove_const<typename std::remove_reference<A>::type>::type>::type;
         }
 
         template <typename ...B>
-        static void paramPacker(char* ptr) {
+        static void paramPacker(SQChar* ptr) {
             int _[] = { 0, (paramPackerType<B>(ptr++), 0)... };
             (void)_;
-            *ptr = '\0';
+            *ptr = _SC('\0');
         }
 
         template<typename Ret, typename... Args>
@@ -91,7 +91,7 @@ namespace ssq {
         }
 
         template<typename T, typename... Args>
-        static Object addClass(HSQUIRRELVM vm, const char* name, const std::function<T*(Args...)>& allocator, bool release = true) {
+        static Object addClass(HSQUIRRELVM vm, const SQChar* name, const std::function<T*(Args...)>& allocator, bool release = true) {
             static const auto hashCode = typeid(T*).hash_code();
             static const std::size_t nparams = sizeof...(Args);
 
@@ -109,7 +109,7 @@ namespace ssq {
 
             sq_settypetag(vm, -1, reinterpret_cast<SQUserPointer>(hashCode));
 
-            sq_pushstring(vm, "constructor", -1);
+            sq_pushstring(vm, _SC("constructor"), -1);
             bindUserData<T*>(vm, allocator);
             static char params[33];
             paramPacker<T*, Args...>(params);
@@ -129,7 +129,7 @@ namespace ssq {
         }
 
         template<typename T>
-        static Object addAbstractClass(HSQUIRRELVM vm, const char* name) {
+        static Object addAbstractClass(HSQUIRRELVM vm, const SQChar* name) {
             static const auto hashCode = typeid(T*).hash_code();
             Object clsObj(vm);
 
@@ -166,7 +166,7 @@ namespace ssq {
                     push(vm, std::forward<R>(callGlobal(vm, funcPtr, index_range<offet, sizeof...(Args) + offet>())));
                     return 1;
                 } catch (std::exception& e) {
-                    return sq_throwerror(vm, e.what());
+                    return sq_throwerror(vm, FromUtf8(e.what()).c_str());
                 }
             }
         };
@@ -187,13 +187,13 @@ namespace ssq {
         };
 
         template<typename R, typename... Args>
-        static void addFunc(HSQUIRRELVM vm, const char* name, const std::function<R(Args...)>& func) {
+        static void addFunc(HSQUIRRELVM vm, const SQChar* name, const std::function<R(Args...)>& func) {
             static const std::size_t nparams = sizeof...(Args);
 
-            sq_pushstring(vm, name, strlen(name));
+            sq_pushstring(vm, name, scstrlen(name));
 
             bindUserData(vm, func);
-            static char params[33];
+            static SQChar params[33];
             paramPacker<void, Args...>(params);
 
             sq_newclosure(vm, &detail::func<1, R, Args...>::global, 1);
@@ -204,7 +204,7 @@ namespace ssq {
         }
 
         template<typename R, typename... Args>
-        static void addMemberFunc(HSQUIRRELVM vm, const char* name, const std::function<R(Args...)>& func, bool isStatic) {
+        static void addMemberFunc(HSQUIRRELVM vm, const SQChar* name, const std::function<R(Args...)>& func, bool isStatic) {
             static const std::size_t nparams = sizeof...(Args);
 
             sq_pushstring(vm, name, strlen(name));

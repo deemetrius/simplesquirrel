@@ -112,20 +112,20 @@ namespace ssq {
         * @returns Function object references the added function
         */
         template<typename F>
-        Function addFunc(const char* name, const F& lambda, bool isStatic = false) {
+        Function addFunc(const SQChar* name, const F& lambda, bool isStatic = false) {
             return addFunc(name, detail::make_function(lambda), isStatic);
         }
         template<typename T, typename V>
-        void addVar(const std::string& name, V T::* ptr, bool isStatic = false) {
-            findTable("_get", tableGet, dlgGetStub);
-            findTable("_set", tableSet, dlgSetStub);
+        void addVar(const sqstring& name, V T::* ptr, bool isStatic = false) {
+            findTable(_SC("_get"), tableGet, dlgGetStub);
+            findTable(_SC("_set"), tableSet, dlgSetStub);
 
             bindVar<T, V>(name, ptr, tableGet.getRaw(), varGetStub<T, V>, isStatic);
             bindVar<T, V>(name, ptr, tableSet.getRaw(), varSetStub<T, V>, isStatic);
         }
         template<typename T, typename V>
-        void addConstVar(const std::string& name, V T::* ptr, bool isStatic = false) {
-            findTable("_get", tableGet, dlgGetStub);
+        void addConstVar(const sqstring& name, V T::* ptr, bool isStatic = false) {
+            findTable(_SC("_get"), tableGet, dlgGetStub);
 
             bindVar<T, V>(name, ptr, tableGet.getRaw(), varGetStub<T, V>, isStatic);
         }
@@ -143,7 +143,7 @@ namespace ssq {
         static SQInteger dlgSetStub(HSQUIRRELVM vm);
 
         template<typename T, typename V>
-        void bindVar(const std::string& name, V T::* ptr, HSQOBJECT& table, SQFUNCTION stub, bool isStatic) {
+        void bindVar(const sqstring& name, V T::* ptr, HSQOBJECT& table, SQFUNCTION stub, bool isStatic) {
             auto rst = sq_gettop(vm);
 
             sq_pushobject(vm, table);
