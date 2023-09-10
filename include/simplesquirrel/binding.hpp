@@ -42,34 +42,34 @@ namespace ssq {
             return static_cast<typename function_traits<L>::f_type>(l);
         }
 
-        template <typename T> struct Param {static const char type = '.';};
+        template <typename T> struct Param {static const SQChar type = _SC('.');};
 
-        template <> struct Param<char> {static const char type = 'i';};
-        template <> struct Param<signed char> {static const char type = 'i';};
-        template <> struct Param<short> {static const char type = 'i';};
-        template <> struct Param<int> {static const char type = 'i';};
-        template <> struct Param<long> {static const char type = 'i';};
-        template <> struct Param<unsigned char> {static const char type = 'i';};
-        template <> struct Param<unsigned short> {static const char type = 'i';};
-        template <> struct Param<unsigned int> {static const char type = 'i';};
-        template <> struct Param<unsigned long> {static const char type = 'i';};
+        template <> struct Param<char> {static const SQChar type = _SC('i');};
+        template <> struct Param<signed char> {static const SQChar type = _SC('i');};
+        template <> struct Param<short> {static const SQChar type = _SC('i');};
+        template <> struct Param<int> {static const SQChar type = _SC('i');};
+        template <> struct Param<long> {static const SQChar type = _SC('i');};
+        template <> struct Param<unsigned char> {static const SQChar type = _SC('i');};
+        template <> struct Param<unsigned short> {static const SQChar type = _SC('i');};
+        template <> struct Param<unsigned int> {static const SQChar type = _SC('i');};
+        template <> struct Param<unsigned long> {static const SQChar type = _SC('i');};
 #ifdef _SQ64
-        template <> struct Param<long long> {static const char type = 'i';};
-        template <> struct Param<unsigned long long> {static const char type = 'i';};
+        template <> struct Param<long long> {static const SQChar type = _SC('i');};
+        template <> struct Param<unsigned long long> {static const SQChar type = _SC('i');};
 #endif
-        template <> struct Param<float> {static const char type = 'f';};
-        template <> struct Param<double> {static const char type = 'f';};
+        template <> struct Param<float> {static const SQChar type = _SC('f');};
+        template <> struct Param<double> {static const SQChar type = _SC('f');};
 #ifdef SQUNICODE
-        template <> struct Param<std::wstring> {static const char type = 's';};
+        template <> struct Param<std::wstring> {static const SQChar type = _SC('s');};
 #else
-        template <> struct Param<std::string> {static const char type = 's';};
+        template <> struct Param<std::string> {static const SQChar type = _SC('s');};
 #endif
-        template <> struct Param<Class> {static const char type = 'y';};
-        template <> struct Param<Function> {static const char type = 'c';};
-        template <> struct Param<Table> {static const char type = 't';};
-        template <> struct Param<Array> {static const char type = 'a';};
-        template <> struct Param<Instance> {static const char type = 'x';};
-        template <> struct Param<std::nullptr_t> {static const char type = 'o';};
+        template <> struct Param<Class> {static const SQChar type = _SC('y');};
+        template <> struct Param<Function> {static const SQChar type = _SC('c');};
+        template <> struct Param<Table> {static const SQChar type = _SC('t');};
+        template <> struct Param<Array> {static const SQChar type = _SC('a');};
+        template <> struct Param<Instance> {static const SQChar type = _SC('x');};
+        template <> struct Param<std::nullptr_t> {static const SQChar type = _SC('o');};
 
         template <typename A>
         static void paramPackerType(SQChar* ptr) {
