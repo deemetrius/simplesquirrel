@@ -80,6 +80,18 @@ namespace ssq {
             return ret;
         }
         /**
+        * @brief Adds a new static function type to this class
+        */
+        template <typename Return, typename... Args>
+        Function addFunc(const SQChar* name, Return(*memfunc)(Args...), bool isStatic = false) {
+          if (vm == nullptr) throw RuntimeException("VM is not initialised");
+          Function ret(vm);
+          sq_pushobject(vm, obj);
+          detail::addMemberFunc(vm, name, std::function<Return(Args...)>(memfunc), true);
+          sq_pop(vm, 1);
+          return ret;
+        }
+        /**
         * @brief Adds a new function type to this class
         * @param name Name of the function to add
         * @param memfunc Pointer to member function
