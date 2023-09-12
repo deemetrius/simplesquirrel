@@ -42,9 +42,9 @@ namespace ssq {
          * @brief Adds a new key-value pair to this table
          */
         template<typename T>
-        void addSlot(const char* name, const T& value) {
+        void addSlot(const SQChar* name, const T& value) {
             sq_pushobject(vm, obj);
-            sq_pushstring(vm, name, strlen(name));
+            sq_pushstring(vm, name, scstrlen(name));
             detail::push<T>(vm, value);
             sq_newslot(vm, -3, false);
             sq_pop(vm,1); // pop table
