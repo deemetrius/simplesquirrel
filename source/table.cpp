@@ -40,6 +40,16 @@ namespace ssq {
         return Class(object);
     }
 
+    Enum Table::addEnumGlobal(const SQChar* name) {
+        Enum enm(vm);
+        sq_pushconsttable(vm);
+        sq_pushstring(vm, name, scstrlen(name));
+        detail::push<Object>(vm, enm);
+        sq_newslot(vm, -3, false);
+        sq_pop(vm,1); // pop table
+        return std::move(enm);
+    }
+
     Table Table::addTable(const SQChar* name) {
         Table table(vm);
         sq_pushobject(vm, obj);

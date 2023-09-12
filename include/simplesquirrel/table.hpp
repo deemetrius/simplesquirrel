@@ -54,6 +54,21 @@ namespace ssq {
         */
         Class findClass(const SQChar* name) const;
         /**
+         * @brief Adds a new enum to this table
+         */
+        Enum addEnumGlobal(const SQChar* name);
+        /**
+         * @brief Adds a new constant key-value pair to this table
+         */
+        template<typename T>
+        inline void setConstGlobal(const char* name, const T& value) {
+            sq_pushconsttable(vm);
+            sq_pushstring(vm, name, strlen(name));
+            detail::push<T>(vm, value);
+            sq_newslot(vm, -3, false);
+            sq_pop(vm,1); // pop table
+        }
+        /**
         * @brief Adds a new class type to this table
         * @returns Class object references the added class
         */
