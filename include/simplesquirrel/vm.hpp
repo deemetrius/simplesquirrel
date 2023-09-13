@@ -204,6 +204,19 @@ namespace ssq {
             return Array(vm, vector);
         }
         /**
+         * @brief Adds a new table to this const table
+         */
+        Table addConstTable(const SQChar* name) {
+            Table tbl(vm);
+            sq_pushconsttable(vm);
+            sq_pushstring(vm, name, scstrlen(name));
+            detail::push<Object>(vm, tbl);
+            sq_newslot(vm, -3, false);
+            sq_pop(vm,1); // pop table
+            return std::move(tbl);
+        }
+
+        /**
          * @brief Adds a new enum to this table
          */
         Enum addEnum(const SQChar* name);

@@ -54,9 +54,13 @@ namespace ssq {
         */
         Class findClass(const SQChar* name) const;
         /**
-         * @brief Adds a new enum to this table
+         * @brief Adds a new global enum to this table
          */
         Enum addEnumGlobal(const SQChar* name);
+        /**
+         * @brief Adds a new local enum to this table
+         */
+        Enum addEnumLocal(const SQChar* name);
         /**
          * @brief Adds a new constant key-value pair to this table
          */
