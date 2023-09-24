@@ -201,6 +201,21 @@ namespace ssq {
         */
         Object& operator = (Object&& other) NOEXCEPT;
 
+
+        // typedef struct tagSQStackInfos{
+        //     const SQChar* funcname;
+        //     const SQChar* source;
+        //     SQInteger line;
+        // }SQStackInfos;
+
+        SQStackInfos getStackInfos() const
+        {
+            SQStackInfos si;
+            sq_stackinfos(vm, 1, &si);
+            return si;
+        }
+
+
     protected:
         HSQUIRRELVM vm;
         HSQOBJECT obj;
