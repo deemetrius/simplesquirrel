@@ -215,6 +215,28 @@ namespace ssq {
             return si;
         }
 
+        SQStackInfos getSafeStackInfos() const
+        {
+            static const SQChar* sqNullStr    = _SC("null");
+            static const SQChar* sqUnknownStr = _SC("unknown");
+
+            SQStackInfos si;
+            sq_stackinfos(vm, 1, &si);
+
+            if (si.source==nullptr)
+            {
+                si.source = sqNullStr;
+            }
+
+            if (si.funcname==nullptr)
+            {
+                si.funcname = sqUnknownStr;
+            }
+
+            return si;
+        }
+
+
 
     protected:
         HSQUIRRELVM vm;
