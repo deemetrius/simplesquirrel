@@ -235,7 +235,7 @@ namespace ssq {
             }
 
             SQInteger len = sq_getsize(vm,index);    
-            return std::wstring(val,len);
+            return std::wstring(val,(std::size_t)len);
         }
 #else
         template<>
@@ -426,7 +426,7 @@ namespace ssq {
 #ifdef SQUNICODE
         template<>
         inline void pushValue(HSQUIRRELVM vm, const std::wstring& value) {
-            sq_pushstring(vm, value.c_str(), value.size());
+            sq_pushstring(vm, value.c_str(), (SQInteger)value.size());
         }
 #else
         template<>

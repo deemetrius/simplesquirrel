@@ -209,7 +209,7 @@ namespace ssq {
         Table addConstTable(const SQChar* name) {
             Table tbl(vm);
             sq_pushconsttable(vm);
-            sq_pushstring(vm, name, scstrlen(name));
+            sq_pushstring(vm, name, (SQInteger)scstrlen(name));
             detail::push<Object>(vm, tbl);
             sq_newslot(vm, -3, false);
             sq_pop(vm,1); // pop table
