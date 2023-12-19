@@ -423,16 +423,29 @@ namespace ssq {
             sq_pushfloat(vm, value);
         }
 
+        typedef SQChar*         SQCharPtr;
+        typedef const SQChar*   SQCharConstPtr;
+
 #ifdef SQUNICODE
         template<>
         inline void pushValue(HSQUIRRELVM vm, const std::wstring& value) {
             sq_pushstring(vm, value.c_str(), (SQInteger)value.size());
         }
+        // Чот не работает эта специализация
+        // template<>
+        // inline void pushValue<SQCharConstPtr>(HSQUIRRELVM vm, SQCharConstPtr& value) {
+        //     return pushValue(vm, std::wstring(value));
+        // }
 #else
         template<>
         inline void pushValue(HSQUIRRELVM vm, const std::string& value) {
             sq_pushstring(vm, value.c_str(), value.size());
         }
+        // Чот не работает эта специализация
+        // template<>
+        // inline void pushValue<SQCharConstPtr>(HSQUIRRELVM vm, SQCharConstPtr& value) {
+        //     return pushValue(vm, std::string(value));
+        // }
 #endif
 
         template<typename T>

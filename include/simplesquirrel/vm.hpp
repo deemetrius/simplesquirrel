@@ -61,6 +61,19 @@ namespace ssq {
         * @brief Creates a VM with a fixed stack size
         */
         VM(size_t stackSize, Libs::Flag flags = 0x00);
+
+        #if 0
+        /**
+        * @brief Creates a temporary VM
+        */
+        explicit
+        VM(HSQUIRRELVM hvm) : Table()
+        {
+            vm = hvm;
+            weak = true;
+        }
+        #endif
+
         /**
         * @brief Destroys the VM and all of this objects
         */
