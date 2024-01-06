@@ -23,7 +23,7 @@ namespace ssq {
             
     }
 
-    size_t Array::size() {
+    size_t Array::size() const {
         sq_pushobject(vm, obj);
         SQInteger s = sq_getsize(vm, -1);
         sq_pop(vm, 1);

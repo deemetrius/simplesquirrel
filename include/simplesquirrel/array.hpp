@@ -58,7 +58,7 @@ namespace ssq {
         /**
         * @brief Returns the size of the array
         */
-        size_t size();
+        size_t size() const;
         /**
         * @brief Pushes an element to the back of the array
         */
@@ -106,7 +106,7 @@ namespace ssq {
         * @throws TypeException if the index is out of bounds or element cannot be returned
         */
         template<typename T>
-        T get(size_t index) {
+        T get(size_t index) const {
             sq_pushobject(vm, obj);
             auto s = static_cast<size_t>(sq_getsize(vm, -1));
             if(index >= s) {
