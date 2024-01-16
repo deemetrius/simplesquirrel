@@ -72,6 +72,7 @@ namespace ssq {
         */
         template <typename Return, typename Object, typename... Args>
         Function addFunc(const SQChar* name, const std::function<Return(Object*, Args...)>& func, bool isStatic = false) {
+            (void)isStatic;
             if (vm == nullptr) throw RuntimeException("VM is not initialised");
             Function ret(vm);
             sq_pushobject(vm, obj);
@@ -84,6 +85,7 @@ namespace ssq {
         */
         template <typename Return, typename... Args>
         Function addFunc(const SQChar* name, Return(*memfunc)(Args...), bool isStatic = false) {
+          (void)isStatic;
           if (vm == nullptr) throw RuntimeException("VM is not initialised");
           Function ret(vm);
           sq_pushobject(vm, obj);
@@ -159,9 +161,9 @@ namespace ssq {
             auto rst = sq_gettop(vm);
 
             sq_pushobject(vm, table);
-            sq_pushstring(vm, name.c_str(), name.size());
+            sq_pushstring(vm, name.c_str(), (SQInteger)name.size());
 
-            auto vp = sq_newuserdata(vm, sizeof(ptr));
+            auto vp = sq_newuserdata(vm, (SQInteger)sizeof(ptr));
             std::memcpy(vp, &ptr, sizeof(ptr));
 
             sq_newclosure(vm, stub, 1);

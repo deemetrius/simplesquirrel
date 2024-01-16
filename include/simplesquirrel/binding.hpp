@@ -120,7 +120,7 @@ namespace ssq {
                 sq_newclosure(vm, &detail::classAllocatorNoRelease<T, Args...>, 1);
             }
 
-            sq_setparamscheck(vm, nparams + 1, params);
+            sq_setparamscheck(vm, (SQInteger)nparams + 1, params);
             sq_newslot(vm, -3, false); // Add the constructor method
 
             sq_newslot(vm, -3, SQFalse); // Add the class
@@ -163,7 +163,7 @@ namespace ssq {
                     FuncPtr<R(Args...)>* funcPtr;
                     sq_getuserdata(vm, -1, reinterpret_cast<void**>(&funcPtr), nullptr);
 
-                    push(vm, std::forward<R>(callGlobal(vm, funcPtr, index_range<offet, sizeof...(Args) + offet>())));
+                    push(vm, std::forward<R>(callGlobal(vm, funcPtr, index_range<offet, (SQInteger)sizeof...(Args) + offet>())));
                     return 1;
                 } catch (std::exception& e) {
                     return sq_throwerror(vm, FromUtf8(e.what()).c_str());
@@ -178,7 +178,7 @@ namespace ssq {
                     FuncPtr<void(Args...)>* funcPtr;
                     sq_getuserdata(vm, -1, reinterpret_cast<void**>(&funcPtr), nullptr);
 
-                    callGlobal(vm, funcPtr, index_range<offet, sizeof...(Args) + offet>());
+                    callGlobal(vm, funcPtr, index_range<offet, (SQInteger)sizeof...(Args) + offet>());
                     return 0;
                 } catch (std::exception& e) {
                     return sq_throwerror(vm, ToSqString(e.what()).c_str());
@@ -197,7 +197,7 @@ namespace ssq {
             paramPacker<void, Args...>(params);
 
             sq_newclosure(vm, &detail::func<1, R, Args...>::global, 1);
-            sq_setparamscheck(vm, nparams + 1, params);
+            sq_setparamscheck(vm, (SQInteger)nparams + 1, params);
             if(SQ_FAILED(sq_newslot(vm, -3, SQFalse))) {
                 throw TypeException("Failed to bind function");
             }
@@ -214,7 +214,7 @@ namespace ssq {
             paramPacker<Args...>(params);
 
             sq_newclosure(vm, &detail::func<0, R, Args...>::global, 1);
-            sq_setparamscheck(vm, nparams, params);
+            sq_setparamscheck(vm, (SQInteger)nparams, params);
             if(SQ_FAILED(sq_newslot(vm, -3, isStatic))) {
                 throw TypeException("Failed to bind member function");
             }
