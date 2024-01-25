@@ -86,6 +86,11 @@ namespace ssq {
         HSQOBJECT& getRaw();
         /**
         * @brief Finds object within this object
+        * integer index
+        */
+        Object find(SQInteger id) const;
+        /**
+        * @brief Finds object within this object
         */
         Object find(const SQChar* name) const;
         /**

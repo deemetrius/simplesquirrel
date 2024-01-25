@@ -3,8 +3,14 @@
 #define SSQ_TABLE_HEADER_H
 
 #include "class.hpp"
+#include <variant>
+#include <map>
 
 namespace ssq {
+
+    using TableKey = std::variant<SQInteger, sqstring>;
+    using TableMap = std::map<TableKey, Object>;
+
     class Enum;
     /**
     * @brief Squirrel table object
@@ -39,6 +45,14 @@ namespace ssq {
         */
         Table(Table&& other) NOEXCEPT;
         /**
+        * @brief Get vector of keys
+        */
+        std::vector<Object> getKeys() const;
+        /**
+        * @brief Get map of key-value pairs
+        */
+        TableMap getMap() const;
+        /**
         * @brief Finds a function in this table
         * @throws RuntimeException if VM is invalid
         * @throws NotFoundException if function was not found
@@ -67,7 +81,7 @@ namespace ssq {
         template<typename T>
         inline void setConstGlobal(const char* name, const T& value) {
             sq_pushconsttable(vm);
-            sq_pushstring(vm, name, strlen(name));
+            sq_pushstring(vm, name, scstrlen(name));
             detail::push<T>(vm, value);
             sq_newslot(vm, -3, false);
             sq_pop(vm,1); // pop table
@@ -130,6 +144,19 @@ namespace ssq {
         template<typename F>
         Function addFunc(const SQChar* name, const F& lambda) {
             return addFunc(name, detail::make_function(lambda));
+        }
+        /**
+         * @brief Adds a new key-value pair to this table
+         * integer key
+         */
+        template<typename T>
+        inline void set(SQInteger id, const T & value)
+        {
+          sq_pushobject(vm, obj);
+          sq_pushinteger(vm, id);
+          detail::push<T>(vm, value);
+          sq_newslot(vm, -3, false);
+          sq_pop(vm, 1); // pop table
         }
         /**
          * @brief Adds a new key-value pair to this table

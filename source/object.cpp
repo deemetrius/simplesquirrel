@@ -90,6 +90,27 @@ namespace ssq {
         return getType() == Type::NULLPTR;
     }
 
+    Object Object::find(SQInteger id) const
+    {
+      if( vm == nullptr ) throw RuntimeException("VM is not initialised");
+
+      Object ret(vm);
+
+      sq_pushobject(vm, obj);
+      sq_pushinteger(vm, id);
+
+      if( SQ_FAILED(sq_get(vm, -2)) ) {
+        sq_pop(vm, 1);
+        throw NotFoundException(std::to_string(id).c_str());
+      }
+
+      sq_getstackobj(vm, -1, &ret.getRaw());
+      sq_addref(vm, &ret.getRaw());
+      sq_pop(vm, 2);
+
+      return ret;
+    }
+
     Object Object::find(const SQChar* name) const {
         if (vm == nullptr) throw RuntimeException("VM is not initialised");
 

@@ -3,6 +3,13 @@
 #include "../include/simplesquirrel/class.hpp"
 #include "../include/simplesquirrel/enum.hpp"
 #include "../include/simplesquirrel/table.hpp"
+
+#include <assert.h>
+#include "../libs/squirrel/squirrel/sqvm.h"
+#include "../libs/squirrel/squirrel/sqstate.h"
+#include "../libs/squirrel/squirrel/sqobject.h"
+#include "../libs/squirrel/squirrel/sqtable.h"
+
 #include <squirrel.h>
 #include <forward_list>
 
@@ -28,6 +35,59 @@ namespace ssq {
 
     Table::Table(Table&& other) NOEXCEPT :Object(std::forward<Table>(other)) {
             
+    }
+
+    std::vector<Object> Table::getKeys() const
+    {
+      std::vector<Object> keys;
+
+      SQTable * tb = _table(obj);
+
+      SQInteger ridx = 0;
+      SQObjectPtr key, val;
+      while( (ridx = tb->Next(true, ridx, key, val)) != -1 )
+      {
+        vm->Push(key);
+        keys.push_back(detail::pop<Object>(vm, -1));
+      }
+
+      return keys;
+    }
+
+    TableMap Table::getMap() const
+    {
+      TableMap ret;
+
+      SQTable * tb = _table(obj);
+
+      SQInteger ridx = 0;
+      SQObjectPtr key, val;
+      while( (ridx = tb->Next(true, ridx, key, val)) != -1 )
+      {
+        vm->Push(key);
+        Object okey = detail::pop<Object>(vm, -1);
+        vm->Push(val);
+        Object oval = detail::pop<Object>(vm, -1);
+
+        switch( okey.getType() )
+        {
+          case Type::INTEGER:
+          {
+            SQInteger i = okey.toInt();
+            ret.try_emplace(i, oval);
+          }
+          break;
+
+          case Type::STRING:
+          {
+            sqstring s = okey.toString();
+            ret.try_emplace(s, oval);
+          }
+          break;
+        }
+      }
+
+      return ret;
     }
 
     Function Table::findFunc(const SQChar* name) const {

@@ -239,7 +239,7 @@ namespace ssq {
         template<typename T>
         inline void setConst(const char* name, const T& value) {
             sq_pushconsttable(vm);
-            sq_pushstring(vm, name, strlen(name));
+            sq_pushstring(vm, name, scstrlen(name));
             detail::push<T>(vm, value);
             sq_newslot(vm, -3, false);
             sq_pop(vm,1); // pop table
